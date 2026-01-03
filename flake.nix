@@ -106,7 +106,7 @@
       packages.${system} = {
         default = self.packages.${system}.cursor;
         cursor = buildCursor {
-          version = "2.2.44";
+          version = "2.3.21";
           url = "https://downloads.cursor.com/production/20adc1003928b0f1b99305dbaf845656ff81f5d4/linux/x64/Cursor-2.2.44-x86_64.AppImage";
           sha256 = "1xmax9j52jynzi29hpr133rg992gbsml445f7vixvwy4mcpp8aw6";  # Will be updated by GitHub Actions
         };
