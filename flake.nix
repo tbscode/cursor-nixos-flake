@@ -7,12 +7,30 @@
 
   outputs = { self, nixpkgs }: 
     let
-      system = "x86_64-linux";
-      pkgs = import nixpkgs { inherit system; };
+      supportedSystems = [ "x86_64-linux" "aarch64-linux" ];
       
-      buildCursor = { version, url, sha256 }: 
+      forAllSystems = nixpkgs.lib.genAttrs supportedSystems;
+      
+      version = "2.4.35";
+      
+      sources = {
+        x86_64-linux = {
+          url = "https://downloads.cursor.com/production/d2bf8ec12017b1049f304ad3a5c8867b117ed836/linux/x64/Cursor-2.4.35-x86_64.AppImage";
+          sha256 = "064jgj5p18irib0z9g1525z86958jk41fymivwljjwr3y9z1v73c";
+        };
+        aarch64-linux = {
+          url = "https://downloads.cursor.com/production/d2bf8ec12017b1049f304ad3a5c8867b117ed836/linux/arm64/Cursor-2.4.35-aarch64.AppImage";
+          sha256 = "077rhlcqbmqa493ximahkh4hi6drqn8aiidp645d9436caydfc1y";
+        };
+      };
+      
+      buildCursor = { pkgs, system }: 
         let
-          src = pkgs.fetchurl { inherit url sha256; };
+          source = sources.${system};
+          src = pkgs.fetchurl { 
+            url = source.url;
+            sha256 = source.sha256;
+          };
           
           # Extract the AppImage to get access to the icon and desktop file
           appimageContents = pkgs.appimageTools.extract {
@@ -103,18 +121,18 @@
         };
     in
     {
-      packages.${system} = {
-        default = self.packages.${system}.cursor;
-        cursor = buildCursor {
-          version = "2.3.21";
-          url = "https://downloads.cursor.com/production/68e0a0385b87408d050869ea543e3778ad53f78a/linux/x64/Cursor-2.3.21-x86_64.AppImage";
-          sha256 = "1qdkvywfx4h05ss9jqy0hrpj6wnn4p9viggbg3z2nk0l5lr20wy9";  # Will be updated by GitHub Actions
-        };
-      };
+      packages = forAllSystems (system: 
+        let
+          pkgs = import nixpkgs { inherit system; };
+        in {
+          default = self.packages.${system}.cursor;
+          cursor = buildCursor { inherit pkgs system; };
+        }
+      );
 
       # Overlay for easy integration into other flakes
       overlays.default = final: prev: {
-        cursor = self.packages.${system}.cursor;
+        cursor = self.packages.${prev.system}.cursor;
       };
     };
 }
