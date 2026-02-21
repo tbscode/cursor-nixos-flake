@@ -132,7 +132,7 @@
 
       # Overlay for easy integration into other flakes
       overlays.default = final: prev: {
-        cursor = self.packages.${prev.system}.cursor;
+        cursor = self.packages.${prev.stdenv.hostPlatform.system}.cursor;
       };
     };
 }
