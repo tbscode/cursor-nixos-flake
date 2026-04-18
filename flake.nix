@@ -16,7 +16,7 @@
       sources = {
         x86_64-linux = {
           url = "https://downloads.cursor.com/production/48a15759f53cd5fc9b5c20936ad7d79847d914b5/linux/x64/Cursor-3.0.13-x86_64.AppImage";
-          sha256 = "1kl0y68m799wzv40khzkzs5lb30nhs4n6a4hzszwflzn8xd51fri";
+          sha256 = "1kmamwcaxqx43rcq5g1slmlgnixbi8zcgy5ay8rhlm3g2jwq39qr";
         };
         aarch64-linux = {
           url = "https://downloads.cursor.com/production/48a15759f53cd5fc9b5c20936ad7d79847d914b5/linux/arm64/Cursor-3.0.13-aarch64.AppImage";
